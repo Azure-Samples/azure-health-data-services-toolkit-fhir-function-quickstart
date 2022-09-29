@@ -1,4 +1,13 @@
-# Azure Health Data Services SDK Azure Function Custom Operation Quickstart
+---
+page_type: sample
+languages:
+- csharp
+products:
+- azure
+- azure-healthcare-apis
+description: Get started quickly with the Azure Health Data Services Toolkit on Azure Functions
+---
+# Azure Health Data Services Toolkit Azure Function Custom Operation Quickstart
 
 This quickstart will walk you through creating a simple custom operation on top of the FHIR Service using Azure Functions. We'll cover everything from deploying infrastructure, debugging locally, and deploying to Azure.
 
@@ -18,7 +27,7 @@ This quickstart will walk you through creating a simple custom operation on top 
 ### Prerequisite check
 
 - In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 6.0 or later.
-- Run `az --version` and `azd --version` to check that you have the appropriate Azure command-line tools installed.
+- Run `az --version` and `azd version` to check that you have the appropriate Azure command-line tools installed.
 
 ## Setting up
 
@@ -33,13 +42,14 @@ This quickstart will create the below resources. These will be used both for loc
 ### Deploy Quickstart
 
 1. Create a new directory on your local machine and open that directory in a terminal or command prompt.
-2. Deploy the needed resources with the below `azd` command. This will pull the Quickstart code and deploy needed Azure resources.
+2. User need to be logged in to Azure using az login
+3. Deploy the needed resources with the below `azd` command. This will pull the Quickstart code and deploy needed Azure resources.
 
     ```dotnetcli
-    azd up --template Azure-Samples/ahds-sdk-fhir-function-quickstart
+    azd up --template Azure-Samples/azure-health-data-services-toolkit-fhir-function-quickstart
     ```
 
-3. This will take about 20 minutes to deploy the FHIR Service.
+4. This will take about 20 minutes to deploy the FHIR Service.
     a. `If you have run this sample in the past, using the same environment name and location will reuse your previous resources.`
 
 ## Testing locally
@@ -64,3 +74,20 @@ This quickstart will create the below resources. These will be used both for loc
 1. Once you are ready to deploy to Azure, we can use azd. Run `azd deploy` from your terminal or command prompt.
 2. The command will output ae endpoint for your function app. Copy this.
 3. Test the endpoint by going to `<Endpoint>/Patient` in your browser or API testing tool.
+
+## Usage details
+
+- `Program.cs` outlines how we can use Azure Function for Simple custom operation using various types of services like authenticator, headers and filters.
+  - UseAuthenticator() Used for accessing Azure resources, it uses azure default credentials.
+  - UseCustomHeaders()  Used  for custom headers Setup, using this service we can add custom header, here we have added custom header with name `X-MS-AZUREFHIR-AUDIT-USER-TOKEN-TEST`.
+  - UseAzureFunctionPipeline() setup pipeline for Azure function.
+  - AddInputFilter(typeof(QuickstartFilter)) Input filter added with name `QuickStart` which in turn used to modify the patient data using JsonTransform.
+  - Add binding to pass the call to the FHIR service.
+- Please refer `QuickstartFilter.cs` file for input filter modifications in the Patient Data.
+  - Added language to resource as ‘en’ (English)
+  - If there is no `Patient.meta.security` label, added [HTEST](https://www.hl7.org/fhir/resource-definitions.html#Meta.security)
+- Custom operation QuickstartSample end point methods listed below 
+  - GET: used to get the patient details using patient id.
+  - POST: creates new patient record with updated filter data which is given above,to verify the new created record use GET method and pass created id.
+  - PUT: it updates the patient data, need to pass patient id,to verify the updated record use GET method and pass updated id.
+  - DELETE: used to delete the patient record from FHIR server by passing patient id, to verify the deleted record use GET method and pass deleted id.

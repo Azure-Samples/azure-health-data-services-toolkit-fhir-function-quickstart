@@ -17,7 +17,7 @@ var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var appTags = {
   'azd-env-name': name
   'app-id': 'azure-health-data-services-sdk'
-  'sample-name': 'patient-everything'
+  'sample-name': 'Quickstart'
 }
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -39,5 +39,6 @@ module template 'core.bicep'= {
   }
 }
 
-output AZURE_LOCATION string = location
-output AZURE_FhirServerUrl string = template.outputs.FhirServiceUrl
+// These map to user secrets for local execution of the program
+output LOCATION string = location
+output FhirServerUrl string = template.outputs.FhirServiceUrl
