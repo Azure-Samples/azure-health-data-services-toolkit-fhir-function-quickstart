@@ -11,7 +11,7 @@ description: Get started quickly with the Azure Health Data Services Toolkit on 
 
 This quickstart will walk you through creating a simple custom operation on top of the FHIR Service using Azure Functions. We'll cover everything from deploying infrastructure, debugging locally, and deploying to Azure.
 
-*This sample does not address authorization for simplicity - the endpoint it open to anyone with the address. Please only use test or sample data for this quickstart.*
+*This sample does not address authorization for simplicity - the endpoint is open to anyone with the address. Please only use test or sample data for this quickstart.*
 
 ## Prerequisites
 
