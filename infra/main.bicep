@@ -12,26 +12,60 @@ param location string
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
-var resourceToken = toLower(uniqueString(subscription().id, name, location))
+@description('Name of your existing Azure Health Data Services workspace (leave blank to create a new one)')
+param existingAzureHealthDataServicesWorkspaceName string = ''
+
+@description('Name of your existing FHIR Service (leave blank to create a new one)')
+param existingFhirServiceName string = ''
+
+@description('Name of your existing resource group (leave blank to create a new one)')
+param existingResourceGroupName string = ''
+
+var envRandomString = toLower(uniqueString(subscription().id, name, location))
+var resourcePrefix = '${substring(name, 0, 11)}-${substring(envRandomString, 0, 5)}'
+
+var createResourceGroup = length(existingResourceGroupName) > 0 ? true : false
+var createWorkspace = length(existingAzureHealthDataServicesWorkspaceName) > 0 ? true : false
+var createFhirService = length(existingFhirServiceName) > 0 ? true : false
 
 var appTags = {
   'azd-env-name': name
-  'app-id': 'azure-health-data-services-sdk'
-  'sample-name': 'Quickstart'
+  'app-id': 'azure-health-data-services-toolkit-fhir-function-quickstart'
 }
 
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = if (createResourceGroup) {
   name: '${name}-rg'
   location: location
   tags: appTags
 }
 
-module template 'core.bicep'= {
+resource existingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' existing = if (!createResourceGroup) {
+  name: existingResourceGroupName
+}
+
+module template 'core.bicep'= if (createResourceGroup) {
   name: 'main'
   scope: resourceGroup
   params: {
-    prefixName: resourceToken
-    workspaceName: '${resourceToken}ahds'
+    prefixName: resourcePrefix
+    createWorkspace: createWorkspace
+    createFhirService: createFhirService
+    workspaceName: '${resourcePrefix}ahds'
+    fhirServiceName: 'testdata'
+    location: location
+    additionalTags: appTags
+    fhirContributorPrincipals: [principalId]
+  }
+}
+
+module existingResourceGrouptemplate 'core.bicep'= if (!createResourceGroup) {
+  name: 'mainExistingResourceGroup'
+  scope: existingResourceGroup
+  params: {
+    prefixName: resourcePrefix
+    createWorkspace: createWorkspace
+    createFhirService: createFhirService
+    workspaceName: '${resourcePrefix}ahds'
     fhirServiceName: 'testdata'
     location: location
     additionalTags: appTags
@@ -41,4 +75,4 @@ module template 'core.bicep'= {
 
 // These map to user secrets for local execution of the program
 output LOCATION string = location
-output FhirServerUrl string = template.outputs.FhirServiceUrl
+output FhirServerUrl string = createResourceGroup ? template.outputs.FhirServiceUrl : existingResourceGrouptemplate.outputs.FhirServiceUrl

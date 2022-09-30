@@ -1,11 +1,17 @@
 @description('Prefix for resources deployed by this solution (App Service, Function App, monitoring, etc)')
 param prefixName string = 'hdssdk${uniqueString(resourceGroup().id)}'
 
+@description('Do you want to create a new Azure Health Data Services workspace or use an existing one?')
+param createWorkspace bool
+
+@description('Do you want to create a new FHIR Service or use an existing one?')
+param createFhirService bool
+
 @description('Name of Azure Health Data Services workspace to deploy or use.')
-param workspaceName string = '${prefixName}workspace'
+param workspaceName string
 
 @description('Name of the FHIR service to deloy or use.')
-param fhirServiceName string = 'testing'
+param fhirServiceName string
 
 @description('Name of the Log Analytics workspace to deploy or use. Leave blank to skip deployment')
 param logAnalyticsName string = '${prefixName}-la'
@@ -37,6 +43,8 @@ var appTags = union(
 module fhir './fhir.bicep'= {
   name: 'fhirDeploy'
   params: {
+    createWorkspace: createWorkspace
+    createFhirService: createFhirService
     workspaceName: workspaceName
     fhirServiceName: fhirServiceName
     location: location

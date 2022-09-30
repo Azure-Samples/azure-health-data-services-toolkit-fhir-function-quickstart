@@ -28,6 +28,7 @@ This quickstart will walk you through creating a simple custom operation on top 
 
 - In a terminal or command window, run `dotnet --version` to check that the .NET SDK is version 6.0 or later.
 - Run `az --version` and `azd version` to check that you have the appropriate Azure command-line tools installed.
+- Login to the Azure CLI
 
 ## Setting up
 
@@ -42,15 +43,31 @@ This quickstart will create the below resources. These will be used both for loc
 ### Deploy Quickstart
 
 1. Create a new directory on your local machine and open that directory in a terminal or command prompt.
-2. User need to be logged in to Azure using az login
-3. Deploy the needed resources with the below `azd` command. This will pull the Quickstart code and deploy needed Azure resources.
+2. Setup your local Quickstart files .
 
     ```dotnetcli
-    azd up --template Azure-Samples/azure-health-data-services-toolkit-fhir-function-quickstart
+    azd init --template Azure-Samples/azure-health-data-services-toolkit-fhir-function-quickstart
     ```
 
-4. This will take about 20 minutes to deploy the FHIR Service.
-    a. `If you have run this sample in the past, using the same environment name and location will reuse your previous resources.`
+3. If you want to use an existing FHIR Service, you need to open `infra/main.parameters.json` and change the following settings:
+
+    - `existingResourceGroupName`: The name of an existing resource group if you want to deploy your Function App there.
+    - `existingAzureHealthDataServicesWorkspaceName`: The name of your existing Azure Health Data Services workspace.
+    - `existingFhirServiceName`: The name of your existing FHIR Service.
+
+4. Next, you need to provision your Azure resources to run the sample with azd. If you are creating a new FHIR Service, this deploy may take 20 minutes.
+
+    ```dotnetcli
+    azd provision
+    ```
+
+5. To deploy your code (this can be done after local testing), run the deploy command.
+
+    ```dotnetcli
+    azd deploy
+    ```
+
+*Note: For more information for developing on the Azure Health Data Services Toolkit, check out the [concepts document](https://github.com/microsoft/azure-health-data-services-toolkit/blob/main/docs/concepts.md).
 
 ## Testing locally
 
