@@ -11,7 +11,7 @@
         "principalId": {
             "value": "${AZURE_PRINCIPAL_ID}"
         },
-        "existingResourceGroup": {
+        "existingResourceGroupName": {
             "value": ""
         },
         "existingAzureHealthDataServicesWorkspaceName": {

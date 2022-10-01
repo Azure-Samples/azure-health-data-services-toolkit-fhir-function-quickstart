@@ -74,7 +74,7 @@ var appServiceName = '${prefixName}-appserv'
 var functionAppName = '${prefixName}-func'
 
 @description('Name for the storage account needed for the Function App')
-var funcStorName = '${prefixName}funcsa'
+var funcStorName = '${replace(prefixName, '-', '')}funcsa'
 
 @description('Deploy Azure Function to run SDK custom operations')
 module function './azureFunction.bicep'= {

@@ -49,7 +49,7 @@ This quickstart will create the below resources. These will be used both for loc
     azd init --template Azure-Samples/azure-health-data-services-toolkit-fhir-function-quickstart
     ```
 
-3. If you want to use an existing FHIR Service, you need to open `infra/main.parameters.json` and change the following settings:
+3. If you want to use an existing FHIR Service, you need to open `infra/main.parameters.json` in a code editor and change the following settings:
 
     - `existingResourceGroupName`: The name of an existing resource group if you want to deploy your Function App there.
     - `existingAzureHealthDataServicesWorkspaceName`: The name of your existing Azure Health Data Services workspace.

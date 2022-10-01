@@ -21,12 +21,12 @@ param existingFhirServiceName string = ''
 @description('Name of your existing resource group (leave blank to create a new one)')
 param existingResourceGroupName string = ''
 
-var envRandomString = toLower(uniqueString(subscription().id, name, location))
+var envRandomString = toLower(uniqueString(subscription().id, name, existingResourceGroupName, location))
 var resourcePrefix = '${substring(name, 0, 11)}-${substring(envRandomString, 0, 5)}'
 
-var createResourceGroup = length(existingResourceGroupName) > 0 ? true : false
-var createWorkspace = length(existingAzureHealthDataServicesWorkspaceName) > 0 ? true : false
-var createFhirService = length(existingFhirServiceName) > 0 ? true : false
+var createResourceGroup = empty(existingResourceGroupName) ? true : false
+var createWorkspace = empty(existingAzureHealthDataServicesWorkspaceName) ? true : false
+var createFhirService = empty(existingFhirServiceName) ? true : false
 
 var appTags = {
   'azd-env-name': name
