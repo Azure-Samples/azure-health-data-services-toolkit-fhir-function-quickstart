@@ -20,7 +20,7 @@ param logAnalyticsName string = '${prefixName}-la'
 param location string = resourceGroup().location
 
 @description('Location to deploy resources')
-param additionalTags object = {}
+param appTags object = {}
 
 @description('ID of principals to give FHIR Contributor on the FHIR service')
 param fhirContributorPrincipals array = []
@@ -30,14 +30,6 @@ param functionAppCustomSettings object = {}
 
 @description('Tenant ID where resources are deployed')
 var tenantId  = subscription().tenantId
-
-@description('Tags for all Azure resources in the solution')
-var appTags = union(
-  {
-    AppID: 'azure-health-data-service-sdk'
-  }, 
-  additionalTags
-)
 
 @description('Deploy Azure Health Data Services and FHIR service')
 module fhir './fhir.bicep'= {

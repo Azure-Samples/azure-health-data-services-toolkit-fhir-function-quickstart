@@ -50,10 +50,10 @@ module template 'core.bicep'= if (createResourceGroup) {
     prefixName: resourcePrefix
     createWorkspace: createWorkspace
     createFhirService: createFhirService
-    workspaceName: '${resourcePrefix}ahds'
+    workspaceName: '${replace(resourcePrefix, '-', '')}ahds'
     fhirServiceName: 'testdata'
     location: location
-    additionalTags: appTags
+    appTags: appTags
     fhirContributorPrincipals: [principalId]
   }
 }
@@ -65,10 +65,10 @@ module existingResourceGrouptemplate 'core.bicep'= if (!createResourceGroup) {
     prefixName: resourcePrefix
     createWorkspace: createWorkspace
     createFhirService: createFhirService
-    workspaceName: '${resourcePrefix}ahds'
-    fhirServiceName: 'testdata'
+    workspaceName: existingAzureHealthDataServicesWorkspaceName
+    fhirServiceName: existingFhirServiceName
     location: location
-    additionalTags: appTags
+    appTags: appTags
     fhirContributorPrincipals: [principalId]
   }
 }
