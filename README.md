@@ -67,7 +67,7 @@ This quickstart will create the below resources. These will be used both for loc
     azd deploy
     ```
 
-*Note: For more information for developing on the Azure Health Data Services Toolkit, check out the [concepts document](https://github.com/microsoft/azure-health-data-services-toolkit/blob/main/docs/concepts.md).
+*Note*: For more information for developing on the Azure Health Data Services Toolkit, check out the [concepts document](https://github.com/microsoft/azure-health-data-services-toolkit/blob/main/docs/concepts.md).
 
 ## Testing locally
 
